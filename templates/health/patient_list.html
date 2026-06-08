@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Patients List - Youth Support Platform{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2"><i class="bi bi-heart-pulse-fill"></i> Patients List</h1>
+            <p class="text-muted">Scenario 2: Health/Mental-Health Follow-Up</p>
+        </div>
+        <div>
+            <a href="{% url 'dashboard:home' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filters</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="region" class="form-label">Region</label>
+                    <select name="region" id="region" class="form-select">
+                        <option value="">All Regions</option>
+                        <option value="Tunis" {% if request.GET.region == 'Tunis' %}selected{% endif %}>Tunis</option>
+                        <option value="Sfax" {% if request.GET.region == 'Sfax' %}selected{% endif %}>Sfax</option>
+                        <option value="Sousse" {% if request.GET.region == 'Sousse' %}selected{% endif %}>Sousse</option>
+                        <option value="Bizerte" {% if request.GET.region == 'Bizerte' %}selected{% endif %}>Bizerte</option>
+                        <option value="Gabès" {% if request.GET.region == 'Gabès' %}selected{% endif %}>Gabès</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="risk_level" class="form-label">Risk Level</label>
+                    <select name="risk_level" id="risk_level" class="form-select">
+                        <option value="">All Risk Levels</option>
+                        <option value="LOW" {% if request.GET.risk_level == 'LOW' %}selected{% endif %}>Low</option>
+                        <option value="MEDIUM" {% if request.GET.risk_level == 'MEDIUM' %}selected{% endif %}>Medium</option>
+                        <option value="HIGH" {% if request.GET.risk_level == 'HIGH' %}selected{% endif %}>High</option>
+                        <option value="CRITICAL" {% if request.GET.risk_level == 'CRITICAL' %}selected{% endif %}>Critical</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Patients Table Card -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-table"></i> Patients ({{ patients.count }})</h5>
+        </div>
+        <div class="card-body">
+            {% if patients %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Age / Gender</th>
+                            <th>Region</th>
+                            <th>Phone</th>
+                            <th>Adherence Rate</th>
+                            <th>Risk Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr>
+                            <td><code>{{ patient.patient_id }}</code></td>
+                            <td>
+                                <strong>{{ patient.first_name }} {{ patient.last_name }}</strong><br>
+                                <small class="text-muted">Registered: {{ patient.registration_date|date:"M d, Y" }}</small>
+                            </td>
+                            <td>
+                                {{ patient.age }} years<br>
+                                <small class="text-muted">{{ patient.get_gender_display }}</small>
+                            </td>
+                            <td>{{ patient.region }}</td>
+                            <td>{{ patient.phone_number }}</td>
+                            <td>
+                                {% with latest_adherence=patient.adherence_records.first %}
+                                    {% if latest_adherence %}
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar {% if latest_adherence.adherence_rate >= 80 %}bg-success{% elif latest_adherence.adherence_rate >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                                 role="progressbar" 
+                                                 style="width: {{ latest_adherence.adherence_rate }}%;">
+                                                {{ latest_adherence.adherence_rate|floatformat:0 }}%
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <span class="badge bg-secondary">No Data</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                {% with latest_adherence=patient.adherence_records.first %}
+                                    {% if latest_adherence %}
+                                        {% if latest_adherence.risk_level == 'LOW' %}
+                                            <span class="badge bg-success">LOW</span>
+                                        {% elif latest_adherence.risk_level == 'MEDIUM' %}
+                                            <span class="badge bg-warning text-dark">MEDIUM</span>
+                                        {% elif latest_adherence.risk_level == 'HIGH' %}
+                                            <span class="badge text-white" style="background-color: #fd7e14;">HIGH</span>
+                                        {% elif latest_adherence.risk_level == 'CRITICAL' %}
+                                            <span class="badge bg-danger">CRITICAL</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">No Assessment</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <a href="{% url 'health:patient-detail' patient.id %}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No patients found matching your filters.</p>
+                <a href="{% url 'health:patient-list' %}" class="btn btn-outline-primary">Clear Filters</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Students List - Youth Support Platform{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2"><i class="bi bi-people-fill"></i> Students List</h1>
+            <p class="text-muted">Scenario 1: Education Early Warning System</p>
+        </div>
+        <div>
+            <a href="{% url 'dashboard:home' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filters</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="region" class="form-label">Region</label>
+                    <select name="region" id="region" class="form-select">
+                        <option value="">All Regions</option>
+                        <option value="Tunis" {% if request.GET.region == 'Tunis' %}selected{% endif %}>Tunis</option>
+                        <option value="Sfax" {% if request.GET.region == 'Sfax' %}selected{% endif %}>Sfax</option>
+                        <option value="Sousse" {% if request.GET.region == 'Sousse' %}selected{% endif %}>Sousse</option>
+                        <option value="Bizerte" {% if request.GET.region == 'Bizerte' %}selected{% endif %}>Bizerte</option>
+                        <option value="Gabès" {% if request.GET.region == 'Gabès' %}selected{% endif %}>Gabès</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="grade_level" class="form-label">Grade Level</label>
+                    <select name="grade_level" id="grade_level" class="form-select">
+                        <option value="">All Grades</option>
+                        {% for grade in "7891011" %}
+                        <option value="{{ grade }}" {% if request.GET.grade_level == grade %}selected{% endif %}>Grade {{ grade }}</option>
+                        {% endfor %}
+                        <option value="12" {% if request.GET.grade_level == '12' %}selected{% endif %}>Grade 12</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="risk_level" class="form-label">Risk Level</label>
+                    <select name="risk_level" id="risk_level" class="form-select">
+                        <option value="">All Risk Levels</option>
+                        <option value="LOW" {% if request.GET.risk_level == 'LOW' %}selected{% endif %}>Low</option>
+                        <option value="MEDIUM" {% if request.GET.risk_level == 'MEDIUM' %}selected{% endif %}>Medium</option>
+                        <option value="HIGH" {% if request.GET.risk_level == 'HIGH' %}selected{% endif %}>High</option>
+                        <option value="CRITICAL" {% if request.GET.risk_level == 'CRITICAL' %}selected{% endif %}>Critical</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Students Table Card -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-table"></i> Students ({{ students.count }})</h5>
+        </div>
+        <div class="card-body">
+            {% if students %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>School</th>
+                            <th>Grade</th>
+                            <th>Region</th>
+                            <th>Risk Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td><code>{{ student.student_id }}</code></td>
+                            <td>
+                                <strong>{{ student.first_name }} {{ student.last_name }}</strong><br>
+                                <small class="text-muted">{{ student.age }} years, {{ student.get_gender_display }}</small>
+                            </td>
+                            <td>{{ student.school_name }}</td>
+                            <td><span class="badge bg-info">Grade {{ student.grade_level }}</span></td>
+                            <td>{{ student.region }}</td>
+                            <td>
+                                {% with latest_risk=student.risk_assessments.first %}
+                                    {% if latest_risk %}
+                                        {% if latest_risk.risk_level == 'LOW' %}
+                                            <span class="badge bg-success">LOW</span>
+                                        {% elif latest_risk.risk_level == 'MEDIUM' %}
+                                            <span class="badge bg-warning text-dark">MEDIUM</span>
+                                        {% elif latest_risk.risk_level == 'HIGH' %}
+                                            <span class="badge bg-orange text-white" style="background-color: #fd7e14;">HIGH</span>
+                                        {% elif latest_risk.risk_level == 'CRITICAL' %}
+                                            <span class="badge bg-danger">CRITICAL</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">No Assessment</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <a href="{% url 'education:student-detail' student.id %}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                <button class="btn btn-sm btn-success" onclick="calculateRisk({{ student.id }})">
+                                    <i class="bi bi-calculator"></i> Calculate Risk
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No students found matching your filters.</p>
+                <a href="{% url 'education:student-list' %}" class="btn btn-outline-primary">Clear Filters</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function calculateRisk(studentId) {
+    if (confirm('Calculate risk assessment for this student?')) {
+        // This would call the API endpoint
+        alert('Risk calculation would be triggered via API for student ID: ' + studentId);
+        // In production: fetch('/api/education/students/' + studentId + '/calculate-risk/', {method: 'POST'})
+    }
+}
+</script>
+{% endblock %}

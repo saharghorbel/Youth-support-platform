@@ -1,0 +1,13 @@
+ID,Patient ID,Patient Name,Action Date,Action Type,Status,Trigger Reason,Outcome
+16,PAT0004,Karim Jebali,2026-06-06,REFERRAL,PENDING,"Critical mental health indicators: mood=4, anxiety=8",
+17,PAT0002,Fares Bouzid,2026-06-06,REFERRAL,PENDING,"Critical mental health indicators: mood=7, anxiety=8",
+18,PAT0006,Sarra Maaloul,2026-06-06,REFERRAL,PENDING,"Critical mental health indicators: mood=7, anxiety=8",
+19,PAT0014,Rami Bouzid,2026-06-06,REFERRAL,PENDING,"Critical mental health indicators: mood=6, anxiety=8",
+27,PAT0017,Yasmine Jebali,2026-06-03,FOLLOW_UP_CALL,PENDING,Low adherence rate (25.0%),
+25,PAT0013,Dorra Jebali,2026-06-02,REMINDER,PENDING,Low adherence rate (50.0%),
+23,PAT0010,Sarra Ayari,2026-05-31,HOME_VISIT,COMPLETED,Low adherence rate (50.0%),Patient contacted successfully
+21,PAT0005,Rim Sassi,2026-05-28,REMINDER,COMPLETED,Low adherence rate (57.14%),Patient contacted successfully
+26,PAT0014,Rami Bouzid,2026-05-27,HOME_VISIT,PENDING,Low adherence rate (33.33%),
+20,PAT0003,Fares Belhadj,2026-05-24,FOLLOW_UP_CALL,PENDING,Low adherence rate (50.0%),
+22,PAT0008,Nesrine Sassi,2026-05-24,FOLLOW_UP_CALL,COMPLETED,Low adherence rate (57.14%),Patient contacted successfully
+24,PAT0012,Mohamed Ben Ali,2026-05-24,FOLLOW_UP_CALL,COMPLETED,Low adherence rate (57.14%),Patient contacted successfully

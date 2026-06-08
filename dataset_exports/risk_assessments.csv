@@ -1,0 +1,61 @@
+ID,Student ID,Student Name,Assessment Date,Attendance Score,Academic Score,Behavior Score,Overall Risk Score,Risk Level,Explanation,Recommendations
+15,STU0001,Dorra Sassi,2026-06-06,93.25,68.02,73.00,79.11,MEDIUM,"Some concerns detected. Attendance: 93.3%, Academic: 68.0%","- Increase monitoring
+- Consider tutoring support"
+16,STU0002,Emna Jebali,2026-06-06,71.12,77.52,66.14,72.68,MEDIUM,"Some concerns detected. Attendance: 71.1%, Academic: 77.5%","- Increase monitoring
+- Consider tutoring support"
+17,STU0003,Karim Slimani,2026-06-06,69.59,61.44,74.78,67.37,MEDIUM,"Some concerns detected. Attendance: 69.6%, Academic: 61.4%","- Increase monitoring
+- Consider tutoring support"
+18,STU0004,Emna Chaabane,2026-06-06,92.00,57.65,93.68,78.60,MEDIUM,"Some concerns detected. Attendance: 92.0%, Academic: 57.7%","- Increase monitoring
+- Consider tutoring support"
+19,STU0005,Emna Ayari,2026-06-06,83.01,72.41,87.86,79.74,MEDIUM,"Some concerns detected. Attendance: 83.0%, Academic: 72.4%","- Increase monitoring
+- Consider tutoring support"
+20,STU0006,Mariem Chouchane,2026-06-06,74.35,96.43,79.25,84.16,LOW,"Student performing well. Attendance: 74.4%, Academic: 96.4%","- Continue monitoring
+- Maintain current support"
+21,STU0007,Zied Sassi,2026-06-06,74.00,89.02,60.77,77.36,MEDIUM,"Some concerns detected. Attendance: 74.0%, Academic: 89.0%","- Increase monitoring
+- Consider tutoring support"
+22,STU0008,Fares Mejri,2026-06-06,84.27,83.50,69.54,81.02,LOW,"Student performing well. Attendance: 84.3%, Academic: 83.5%","- Continue monitoring
+- Maintain current support"
+23,STU0009,Ali Khelifi,2026-06-06,88.53,53.44,65.03,69.80,MEDIUM,"Some concerns detected. Attendance: 88.5%, Academic: 53.4%","- Increase monitoring
+- Consider tutoring support"
+24,STU0010,Rami Slimani,2026-06-06,76.73,91.45,71.97,81.67,LOW,"Student performing well. Attendance: 76.7%, Academic: 91.4%","- Continue monitoring
+- Maintain current support"
+25,STU0011,Amira Maaloul,2026-06-06,66.89,96.03,79.88,81.14,LOW,"Student performing well. Attendance: 66.9%, Academic: 96.0%","- Continue monitoring
+- Maintain current support"
+26,STU0012,Mariem Mejri,2026-06-06,94.34,55.31,87.69,77.40,MEDIUM,"Some concerns detected. Attendance: 94.3%, Academic: 55.3%","- Increase monitoring
+- Consider tutoring support"
+27,STU0013,Mohamed Hamdi,2026-06-06,61.25,67.31,69.84,65.39,MEDIUM,"Some concerns detected. Attendance: 61.3%, Academic: 67.3%","- Increase monitoring
+- Consider tutoring support"
+28,STU0014,Sarra Maaloul,2026-06-06,98.98,98.01,67.07,92.21,LOW,"Student performing well. Attendance: 99.0%, Academic: 98.0%","- Continue monitoring
+- Maintain current support"
+29,STU0015,Dorra Bouzid,2026-06-06,84.60,79.52,80.54,81.76,LOW,"Student performing well. Attendance: 84.6%, Academic: 79.5%","- Continue monitoring
+- Maintain current support"
+30,STU0016,Rahma Mejri,2026-06-06,94.08,62.67,67.68,76.24,MEDIUM,"Some concerns detected. Attendance: 94.1%, Academic: 62.7%","- Increase monitoring
+- Consider tutoring support"
+31,STU0017,Rim Jebali,2026-06-06,74.25,99.21,84.31,86.25,LOW,"Student performing well. Attendance: 74.3%, Academic: 99.2%","- Continue monitoring
+- Maintain current support"
+32,STU0018,Ines Mansouri,2026-06-06,86.26,78.69,94.36,84.85,LOW,"Student performing well. Attendance: 86.3%, Academic: 78.7%","- Continue monitoring
+- Maintain current support"
+33,STU0019,Sarra Chaabane,2026-06-06,89.74,56.70,68.69,72.31,MEDIUM,"Some concerns detected. Attendance: 89.7%, Academic: 56.7%","- Increase monitoring
+- Consider tutoring support"
+34,STU0020,Mariem Oueslati,2026-06-06,63.26,91.16,94.25,80.62,LOW,"Student performing well. Attendance: 63.3%, Academic: 91.2%","- Continue monitoring
+- Maintain current support"
+35,STU0021,Hiba Karoui,2026-06-06,67.90,99.12,71.25,81.06,LOW,"Student performing well. Attendance: 67.9%, Academic: 99.1%","- Continue monitoring
+- Maintain current support"
+36,STU0022,Mehdi Bouazizi,2026-06-06,70.52,74.77,89.71,76.06,MEDIUM,"Some concerns detected. Attendance: 70.5%, Academic: 74.8%","- Increase monitoring
+- Consider tutoring support"
+37,STU0023,Bilel Karoui,2026-06-06,91.39,94.19,80.77,90.39,LOW,"Student performing well. Attendance: 91.4%, Academic: 94.2%","- Continue monitoring
+- Maintain current support"
+38,STU0024,Amira Hamdi,2026-06-06,87.81,55.68,63.43,70.08,MEDIUM,"Some concerns detected. Attendance: 87.8%, Academic: 55.7%","- Increase monitoring
+- Consider tutoring support"
+39,STU0025,Tarek Jebali,2026-06-06,68.60,98.97,99.86,87.00,LOW,"Student performing well. Attendance: 68.6%, Academic: 99.0%","- Continue monitoring
+- Maintain current support"
+40,STU0026,Youssef Chouchane,2026-06-06,88.86,68.81,96.02,82.27,LOW,"Student performing well. Attendance: 88.9%, Academic: 68.8%","- Continue monitoring
+- Maintain current support"
+41,STU0027,Ali Ben Ali,2026-06-06,65.46,56.06,83.37,65.28,MEDIUM,"Some concerns detected. Attendance: 65.5%, Academic: 56.1%","- Increase monitoring
+- Consider tutoring support"
+42,STU0028,Hiba Khelifi,2026-06-06,97.12,71.45,86.45,84.72,LOW,"Student performing well. Attendance: 97.1%, Academic: 71.5%","- Continue monitoring
+- Maintain current support"
+43,STU0029,Rami Bouzid,2026-06-06,95.38,89.40,94.54,92.82,LOW,"Student performing well. Attendance: 95.4%, Academic: 89.4%","- Continue monitoring
+- Maintain current support"
+44,STU0030,Amine Dridi,2026-06-06,85.72,99.72,63.02,86.78,LOW,"Student performing well. Attendance: 85.7%, Academic: 99.7%","- Continue monitoring
+- Maintain current support"

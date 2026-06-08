@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Alerts - Youth Support Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2"><i class="bi bi-exclamation-triangle"></i> Risk Alerts</h1>
+        <p class="text-muted">Monitor and manage student risk assessments</p>
+    </div>
+    <div>
+        <a href="{% url 'dashboard:home' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Summary -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-label">Total Assessments</div>
+            <div class="stat-value text-primary">{{ stats.total }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-danger">
+            <div class="stat-label">Critical</div>
+            <div class="stat-value text-danger">{{ stats.critical }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-warning">
+            <div class="stat-label">High Risk</div>
+            <div class="stat-value text-warning">{{ stats.high }}</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-success">
+            <div class="stat-label">Medium Risk</div>
+            <div class="stat-value" style="color: #f39c12;">{{ stats.medium }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Filter by Risk Level</label>
+                <select name="risk_level" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Levels</option>
+                    <option value="CRITICAL" {% if current_filter == "CRITICAL" %}selected{% endif %}>Critical</option>
+                    <option value="HIGH" {% if current_filter == "HIGH" %}selected{% endif %}>High</option>
+                    <option value="MEDIUM" {% if current_filter == "MEDIUM" %}selected{% endif %}>Medium</option>
+                    <option value="LOW" {% if current_filter == "LOW" %}selected{% endif %}>Low</option>
+                </select>
+            </div>
+            <div class="col-md-9 d-flex align-items-end">
+                <a href="{% url 'dashboard:alerts' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Clear Filter
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Alerts Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-list-ul"></i> Risk Assessments</h5>
+    </div>
+    <div class="card-body">
+        {% if assessments %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th>School</th>
+                        <th>Grade</th>
+                        <th>Risk Level</th>
+                        <th>Overall Score</th>
+                        <th>Attendance</th>
+                        <th>Academic</th>
+                        <th>Behavior</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assessment in assessments %}
+                    <tr>
+                        <td>{{ assessment.assessment_date|date:"M d, Y" }}</td>
+                        <td>
+                            <strong>{{ assessment.student.full_name }}</strong><br>
+                            <small class="text-muted">{{ assessment.student.student_id }}</small>
+                        </td>
+                        <td>{{ assessment.student.school_name|truncatewords:3 }}</td>
+                        <td><span class="badge bg-secondary">Grade {{ assessment.student.grade_level }}</span></td>
+                        <td>
+                            <span class="badge badge-risk-{{ assessment.risk_level|lower }}">
+                                {{ assessment.risk_level }}
+                            </span>
+                        </td>
+                        <td>
+                            <strong>{{ assessment.overall_risk_score|floatformat:1 }}</strong>/100
+                        </td>
+                        <td>
+                            <span class="{% if assessment.attendance_score >= 80 %}text-success{% elif assessment.attendance_score >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                                {{ assessment.attendance_score|floatformat:1 }}%
+                            </span>
+                        </td>
+                        <td>
+                            <span class="{% if assessment.academic_score >= 80 %}text-success{% elif assessment.academic_score >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                                {{ assessment.academic_score|floatformat:1 }}%
+                            </span>
+                        </td>
+                        <td>
+                            <span class="{% if assessment.behavior_score >= 80 %}text-success{% elif assessment.behavior_score >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                                {{ assessment.behavior_score|floatformat:1 }}%
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:student-detail' assessment.student.id %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 4rem; color: #dee2e6;"></i>
+            <p class="text-muted mt-3">No risk assessments found</p>
+            {% if current_filter %}
+            <a href="{% url 'dashboard:alerts' %}" class="btn btn-outline-primary">
+                Clear Filter
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Explanation Section -->
+<div class="card mt-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Understanding Risk Levels</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <h6><span class="badge badge-risk-low">LOW RISK</span></h6>
+                <p class="small">Overall score ≥ 80<br>Student performing well</p>
+            </div>
+            <div class="col-md-3">
+                <h6><span class="badge badge-risk-medium">MEDIUM RISK</span></h6>
+                <p class="small">Overall score 60-79<br>Some concerns detected</p>
+            </div>
+            <div class="col-md-3">
+                <h6><span class="badge badge-risk-high">HIGH RISK</span></h6>
+                <p class="small">Overall score 40-59<br>Multiple risk factors</p>
+            </div>
+            <div class="col-md-3">
+                <h6><span class="badge badge-risk-critical">CRITICAL RISK</span></h6>
+                <p class="small">Overall score < 40<br>Immediate intervention needed</p>
+            </div>
+        </div>
+        <hr>
+        <p class="mb-0"><strong>Risk Score Calculation:</strong></p>
+        <ul class="mb-0">
+            <li>Attendance Score: 40% weight</li>
+            <li>Academic Score: 40% weight</li>
+            <li>Behavior Score: 20% weight</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

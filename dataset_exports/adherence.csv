@@ -1,0 +1,21 @@
+ID,Patient ID,Patient Name,Assessment Date,Adherence Rate,Missed Appointments,Risk Level,Notes
+8,PAT0001,Rim Oueslati,2026-06-06,71.43,1,MEDIUM,Adherence rate: 71.4%
+9,PAT0002,Fares Bouzid,2026-06-06,75.00,1,MEDIUM,Adherence rate: 75.0%
+10,PAT0003,Fares Belhadj,2026-06-06,50.00,2,HIGH,Adherence rate: 50.0%
+11,PAT0004,Karim Jebali,2026-06-06,100.00,0,LOW,Adherence rate: 100.0%
+12,PAT0005,Rim Sassi,2026-06-06,57.14,2,HIGH,Adherence rate: 57.1%
+13,PAT0006,Sarra Maaloul,2026-06-06,87.50,1,LOW,Adherence rate: 87.5%
+14,PAT0007,Walid Karoui,2026-06-06,66.67,1,MEDIUM,Adherence rate: 66.7%
+15,PAT0008,Nesrine Sassi,2026-06-06,57.14,2,HIGH,Adherence rate: 57.1%
+16,PAT0009,Ali Mejri,2026-06-06,66.67,1,MEDIUM,Adherence rate: 66.7%
+17,PAT0010,Sarra Ayari,2026-06-06,50.00,4,HIGH,Adherence rate: 50.0%
+18,PAT0011,Amine Karoui,2026-06-06,100.00,0,LOW,Adherence rate: 100.0%
+19,PAT0012,Mohamed Ben Ali,2026-06-06,57.14,2,HIGH,Adherence rate: 57.1%
+20,PAT0013,Dorra Jebali,2026-06-06,50.00,2,HIGH,Adherence rate: 50.0%
+21,PAT0014,Rami Bouzid,2026-06-06,33.33,0,HIGH,Adherence rate: 33.3%
+22,PAT0015,Fatma Oueslati,2026-06-06,80.00,0,LOW,Adherence rate: 80.0%
+23,PAT0016,Karim Khelifi,2026-06-06,100.00,0,LOW,Adherence rate: 100.0%
+24,PAT0017,Yasmine Jebali,2026-06-06,25.00,3,CRITICAL,Adherence rate: 25.0%
+25,PAT0018,Walid Bouazizi,2026-06-06,66.67,0,MEDIUM,Adherence rate: 66.7%
+26,PAT0019,Emna Bouzid,2026-06-06,66.67,1,MEDIUM,Adherence rate: 66.7%
+27,PAT0020,Hiba Mansouri,2026-06-06,66.67,1,MEDIUM,Adherence rate: 66.7%

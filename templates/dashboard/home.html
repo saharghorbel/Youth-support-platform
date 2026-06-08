@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Youth Support Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2">Dashboard</h1>
+        <p class="text-muted">Welcome back, {{ user.get_full_name }}!</p>
+    </div>
+    <div>
+        <span class="text-muted">Last updated: <strong id="lastUpdated"></strong></span>
+    </div>
+</div>
+
+<!-- Key Performance Indicators -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card stat-primary">
+            <div class="stat-label">Total Students</div>
+            <div class="stat-value text-primary">{{ kpis.total_students }}</div>
+            <small class="text-muted">Active records</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-danger">
+            <div class="stat-label">High Risk</div>
+            <div class="stat-value text-danger">{{ kpis.high_risk_count }}</div>
+            <small class="text-muted">Require attention</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-warning">
+            <div class="stat-label">Active Interventions</div>
+            <div class="stat-value text-warning">{{ kpis.active_interventions }}</div>
+            <small class="text-muted">In progress</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card stat-success">
+            <div class="stat-label">Completion Rate</div>
+            <div class="stat-value text-success">{{ kpis.completion_rate }}%</div>
+            <small class="text-muted">This month</small>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Risk Distribution Chart -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Risk Level Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="riskChart" height="80"></canvas>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for activity in recent_activities %}
+                    <div class="timeline-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>{{ activity.description }}</strong>
+                                <p class="text-muted mb-0">
+                                    <small>by {{ activity.user.get_full_name }} - {{ activity.timestamp|timesince }} ago</small>
+                                </p>
+                            </div>
+                            <span class="badge bg-{{ activity.result|lower }}">{{ activity.result }}</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No recent activity</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts & Quick Actions -->
+    <div class="col-md-4">
+        <!-- Critical Alerts -->
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Critical Alerts</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if critical_alerts %}
+                    {% for alert in critical_alerts %}
+                    <div class="alert-item alert-critical">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>{{ alert.student.full_name }}</strong>
+                                <p class="mb-1 small">{{ alert.explanation|truncatewords:15 }}</p>
+                                <small class="text-muted">{{ alert.assessment_date|date:"M d, Y" }}</small>
+                            </div>
+                            <span class="badge bg-danger">CRITICAL</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="p-3 text-center text-muted">
+                    <i class="bi bi-check-circle" style="font-size: 2rem;"></i>
+                    <p class="mb-0">No critical alerts</p>
+                </div>
+                {% endif %}
+            </div>
+            {% if critical_alerts %}
+            <div class="card-footer text-center">
+                <a href="{% url 'dashboard:alerts' %}" class="text-decoration-none">View all alerts <i class="bi bi-arrow-right"></i></a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'dashboard:students-list' %}" class="btn btn-primary w-100 mb-2">
+                    <i class="bi bi-people"></i> View All Students
+                </a>
+                <a href="{% url 'dashboard:patients-list' %}" class="btn btn-info w-100 mb-2">
+                    <i class="bi bi-heart-pulse"></i> View All Patients
+                </a>
+                
+                {% if user.has_supervisor_permission %}
+                <a href="{% url 'dashboard:alerts' %}" class="btn btn-warning w-100 mb-2">
+                    <i class="bi bi-exclamation-triangle"></i> View All Alerts
+                </a>
+                <a href="{% url 'dashboard:reports' %}" class="btn btn-success w-100 mb-2">
+                    <i class="bi bi-file-earmark-bar-graph"></i> Generate Report
+                </a>
+                {% endif %}
+                
+                <hr>
+                
+                <a href="/api/docs/" class="btn btn-outline-secondary w-100 mb-2">
+                    <i class="bi bi-code-square"></i> API Documentation
+                </a>
+                <a href="/graphql/" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-diagram-3"></i> GraphQL Playground
+                </a>
+            </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-heart-pulse"></i> System Health</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Data Quality</span>
+                    <span class="badge bg-success">{{ system_health.data_quality }}%</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: {{ system_health.data_quality }}%"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Workflow Completion</span>
+                    <span class="badge bg-success">{{ system_health.workflow_completion }}%</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: {{ system_health.workflow_completion }}%"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Response Time</span>
+                    <span class="badge bg-success">{{ system_health.response_time }}ms</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Intervention Status -->
+{% if user.has_supervisor_permission %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Pending Interventions</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Title</th>
+                                <th>Risk Level</th>
+                                <th>Start Date</th>
+                                <th>Status</th>
+                                <th>Assigned To</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for intervention in pending_interventions %}
+                            <tr>
+                                <td>
+                                    <strong>{{ intervention.student.full_name }}</strong><br>
+                                    <small class="text-muted">{{ intervention.student.school_name }}</small>
+                                </td>
+                                <td>{{ intervention.title }}</td>
+                                <td>
+                                    <span class="badge badge-risk-{{ intervention.risk_assessment.risk_level|lower }}">
+                                        {{ intervention.risk_assessment.risk_level }}
+                                    </span>
+                                </td>
+                                <td>{{ intervention.start_date|date:"M d, Y" }}</td>
+                                <td>
+                                    <span class="badge bg-warning">{{ intervention.get_status_display }}</span>
+                                </td>
+                                <td>{{ intervention.assigned_to.get_full_name|default:"Unassigned" }}</td>
+                                <td>
+                                    <span class="badge bg-info">View in API</span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">No pending interventions</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Update last updated time
+    document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+    
+    // Risk Distribution Chart
+    const ctx = document.getElementById('riskChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Low Risk', 'Medium Risk', 'High Risk', 'Critical Risk'],
+            datasets: [{
+                label: 'Number of Students',
+                data: [
+                    {{ risk_distribution.low }},
+                    {{ risk_distribution.medium }},
+                    {{ risk_distribution.high }},
+                    {{ risk_distribution.critical }}
+                ],
+                backgroundColor: [
+                    'rgba(39, 174, 96, 0.8)',
+                    'rgba(243, 156, 18, 0.8)',
+                    'rgba(230, 126, 34, 0.8)',
+                    'rgba(231, 76, 60, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(39, 174, 96, 1)',
+                    'rgba(243, 156, 18, 1)',
+                    'rgba(230, 126, 34, 1)',
+                    'rgba(231, 76, 60, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+    
+    // Auto-refresh every 5 minutes
+    setTimeout(function() {
+        location.reload();
+    }, 300000);
+</script>
+{% endblock %}

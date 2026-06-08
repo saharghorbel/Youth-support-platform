@@ -1,0 +1,31 @@
+ID,Student ID,First Name,Last Name,Date of Birth,Gender,School Name,Grade Level,Region,Guardian Name,Guardian Phone,Guardian Email,Enrollment Date,Is Active
+16,STU0005,Emna,Ayari,2009-02-08,F,École La Marsa,12,Nabeul,Amine Ayari,20441742,emna.ayari@email.com,2026-01-12,True
+38,STU0027,Ali,Ben Ali,2013-02-03,M,École Ibn Khaldoun,8,Nabeul,Rami Ben Ali,21448274,ali.benali@email.com,2025-06-28,True
+33,STU0022,Mehdi,Bouazizi,2013-11-26,M,École Bardo,8,Ben Arous,Fares Bouazizi,22729730,mehdi.bouazizi@email.com,2025-08-03,True
+26,STU0015,Dorra,Bouzid,2014-01-01,F,École Bardo,7,Manouba,Bilel Bouzid,23375240,dorra.bouzid@email.com,2025-10-07,True
+40,STU0029,Rami,Bouzid,2019-11-11,M,École Bardo,2,Ben Arous,Mehdi Bouzid,20650004,rami.bouzid@email.com,2025-12-31,True
+15,STU0004,Emna,Chaabane,2019-05-16,F,École El Manar,2,Sousse,Mohamed Chaabane,28550567,emna.chaabane@email.com,2025-07-06,True
+30,STU0019,Sarra,Chaabane,2010-08-24,F,École Bourguiba,11,Sousse,Rami Chaabane,23187166,sarra.chaabane@email.com,2026-04-01,True
+17,STU0006,Mariem,Chouchane,2014-03-20,F,École La Marsa,7,Ariana,Mohamed Chouchane,26416057,mariem.chouchane@email.com,2025-09-28,True
+37,STU0026,Youssef,Chouchane,2014-12-27,M,École Primaire Carthage,7,Sfax,Zied Chouchane,25473139,youssef.chouchane@email.com,2026-01-22,True
+41,STU0030,Amine,Dridi,2010-01-08,M,École Bardo,11,Gabès,Bilel Dridi,23429187,amine.dridi@email.com,2026-01-26,True
+35,STU0024,Amira,Hamdi,2015-04-20,F,Lycée Pilote Ariana,6,Ben Arous,Rami Hamdi,26221040,amira.hamdi@email.com,2026-03-21,True
+24,STU0013,Mohamed,Hamdi,2013-10-09,M,Collège Sadiki,8,Gabès,Ali Hamdi,24853484,mohamed.hamdi@email.com,2026-03-29,True
+13,STU0002,Emna,Jebali,2008-01-27,F,École Menzah,12,Ariana,Hamza Jebali,26108755,emna.jebali@email.com,2026-02-23,True
+28,STU0017,Rim,Jebali,2015-01-14,F,Collège Sadiki,6,Gabès,Rami Jebali,26873413,rim.jebali@email.com,2026-04-10,True
+36,STU0025,Tarek,Jebali,2011-11-07,M,École Menzah,10,Sfax,Hamza Jebali,28792843,tarek.jebali@email.com,2025-12-15,True
+34,STU0023,Bilel,Karoui,2019-05-11,M,Collège Sadiki,2,Gabès,Amine Karoui,20448795,bilel.karoui@email.com,2026-04-10,True
+32,STU0021,Hiba,Karoui,2012-06-25,F,Lycée Pilote Ariana,9,Gabès,Fares Karoui,21209354,hiba.karoui@email.com,2026-04-03,True
+20,STU0009,Ali,Khelifi,2010-11-06,M,Lycée Pilote Ariana,11,Tunis,Fares Khelifi,29818805,ali.khelifi@email.com,2026-01-28,True
+39,STU0028,Hiba,Khelifi,2008-04-24,F,École La Marsa,12,Ariana,Ali Khelifi,22351252,hiba.khelifi@email.com,2025-09-17,True
+22,STU0011,Amira,Maaloul,2016-08-05,F,École El Manar,5,Manouba,Amine Maaloul,22264550,amira.maaloul@email.com,2025-07-13,True
+25,STU0014,Sarra,Maaloul,2008-08-05,F,École Bardo,12,Sfax,Amine Maaloul,28494887,sarra.maaloul@email.com,2025-08-27,True
+29,STU0018,Ines,Mansouri,2018-10-05,F,École Bardo,3,Sfax,Rami Mansouri,29855536,ines.mansouri@email.com,2025-10-20,True
+19,STU0008,Fares,Mejri,2016-08-12,M,Collège Sadiki,5,Kairouan,Sami Mejri,26889724,fares.mejri@email.com,2025-09-08,True
+23,STU0012,Mariem,Mejri,2016-05-28,F,École Bourguiba,5,Sousse,Zied Mejri,22490103,mariem.mejri@email.com,2025-10-07,True
+27,STU0016,Rahma,Mejri,2017-08-05,F,Lycée Pilote Ariana,4,Nabeul,Fares Mejri,22191882,rahma.mejri@email.com,2026-04-04,True
+31,STU0020,Mariem,Oueslati,2016-03-28,F,École Bardo,5,Sfax,Bilel Oueslati,24295130,mariem.oueslati@email.com,2026-02-25,True
+12,STU0001,Dorra,Sassi,2009-08-12,F,École Ibn Khaldoun,12,Sfax,Fares Sassi,25394522,dorra.sassi@email.com,2025-11-29,True
+18,STU0007,Zied,Sassi,2017-11-08,M,École Bardo,4,Manouba,Walid Sassi,29821797,zied.sassi@email.com,2025-07-01,True
+14,STU0003,Karim,Slimani,2014-07-26,M,École Bardo,7,Tunis,Fares Slimani,28646287,karim.slimani@email.com,2025-10-29,True
+21,STU0010,Rami,Slimani,2008-10-07,M,Collège Sadiki,12,Ben Arous,Mehdi Slimani,23751764,rami.slimani@email.com,2025-09-03,True

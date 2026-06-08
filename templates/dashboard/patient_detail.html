@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ patient.full_name }} - Youth Support Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2"><i class="bi bi-person-heart"></i> {{ patient.full_name }}</h1>
+        <p class="text-muted">Patient ID: <code>{{ patient.patient_id }}</code></p>
+    </div>
+    <div>
+        <a href="{% url 'dashboard:patients-list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Patients
+        </a>
+    </div>
+</div>
+
+<!-- Patient Overview -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Patient Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Full Name:</strong> {{ patient.full_name }}</p>
+                        <p><strong>Date of Birth:</strong> {{ patient.date_of_birth|date:"F d, Y" }}</p>
+                        <p><strong>Age:</strong> {{ patient.age }} years</p>
+                        <p><strong>Gender:</strong> {{ patient.get_gender_display }}</p>
+                        <p><strong>Region:</strong> {{ patient.region }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Phone:</strong> {{ patient.phone_number }}</p>
+                        <p><strong>Email:</strong> {{ patient.email }}</p>
+                        <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact_name }}</p>
+                        <p><strong>Emergency Phone:</strong> {{ patient.emergency_contact_phone }}</p>
+                        <p><strong>Registration Date:</strong> {{ patient.registration_date|date:"F d, Y" }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if patient.is_active %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% if patient.medical_notes %}
+                <hr>
+                <p><strong>Medical Notes:</strong></p>
+                <pre class="bg-light p-2 rounded">{{ patient.medical_notes }}</pre>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Quick Stats</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Adherence Rate</span>
+                        <strong>{{ adherence_rate }}%</strong>
+                    </div>
+                    <div class="progress mt-1" style="height: 8px;">
+                        <div class="progress-bar {% if adherence_rate >= 80 %}bg-success{% elif adherence_rate >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                             style="width: {{ adherence_rate }}%"></div>
+                    </div>
+                </div>
+                
+                {% if latest_adherence %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Risk Level</span>
+                        <span class="badge badge-risk-{{ latest_adherence.risk_level|lower }}">
+                            {{ latest_adherence.risk_level }}
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <hr>
+                
+                <p class="mb-1"><strong>Total Appointments:</strong> {{ total_appointments }}</p>
+                <p class="mb-1"><strong>Completed:</strong> <span class="text-success">{{ completed_appointments }}</span></p>
+                <p class="mb-1"><strong>Missed:</strong> <span class="text-danger">{{ missed_appointments }}</span></p>
+                <p class="mb-0"><strong>Follow-ups:</strong> {{ follow_ups|length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Adherence Records -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-clipboard-data"></i> Adherence Records</h5>
+    </div>
+    <div class="card-body">
+        {% if adherence_records %}
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Total Appointments</th>
+                        <th>Attended</th>
+                        <th>Missed</th>
+                        <th>Adherence Rate</th>
+                        <th>Consecutive Missed</th>
+                        <th>Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in adherence_records %}
+                    <tr>
+                        <td>{{ record.assessment_date|date:"M d, Y" }}</td>
+                        <td>{{ record.total_appointments }}</td>
+                        <td><span class="text-success">{{ record.attended_appointments }}</span></td>
+                        <td><span class="text-danger">{{ record.missed_appointments }}</span></td>
+                        <td>
+                            <div class="progress" style="height: 20px; width: 100px;">
+                                <div class="progress-bar {% if record.adherence_rate >= 80 %}bg-success{% elif record.adherence_rate >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                     style="width: {{ record.adherence_rate }}%">
+                                    {{ record.adherence_rate|floatformat:0 }}%
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if record.consecutive_missed > 0 %}
+                            <span class="badge bg-danger">{{ record.consecutive_missed }}</span>
+                            {% else %}
+                            <span class="badge bg-success">0</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge badge-risk-{{ record.risk_level|lower }}">
+                                {{ record.risk_level }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">No adherence records available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Appointments -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Appointments</h5>
+    </div>
+    <div class="card-body">
+        {% if appointments %}
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Provider</th>
+                        <th>Location</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.appointment_date|date:"M d, Y" }}</td>
+                        <td>{{ appointment.appointment_time|time:"H:i" }}</td>
+                        <td><span class="badge bg-secondary">{{ appointment.get_appointment_type_display }}</span></td>
+                        <td>
+                            {% if appointment.status == "COMPLETED" %}
+                            <span class="badge bg-success">Completed</span>
+                            {% elif appointment.status == "SCHEDULED" %}
+                            <span class="badge bg-primary">Scheduled</span>
+                            {% elif appointment.status == "MISSED" %}
+                            <span class="badge bg-danger">Missed</span>
+                            {% elif appointment.status == "CANCELLED" %}
+                            <span class="badge bg-secondary">Cancelled</span>
+                            {% else %}
+                            <span class="badge bg-info">{{ appointment.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ appointment.provider_name }}</td>
+                        <td>{{ appointment.location }}</td>
+                        <td>{{ appointment.reason|truncatewords:10 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">No appointments available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Follow-up Sessions -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Follow-up Sessions</h5>
+    </div>
+    <div class="card-body">
+        {% if follow_ups %}
+        {% for session in follow_ups %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>{{ session.session_date|date:"F d, Y" }}</strong>
+                    <span class="badge bg-info">{{ session.session_duration }} minutes</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <p><strong>Provider:</strong> {{ session.provider_name }}</p>
+                
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <p><strong>Mood Score:</strong> 
+                            <span class="badge {% if session.mood_score >= 7 %}bg-success{% elif session.mood_score >= 4 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ session.mood_score }}/10
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Anxiety Score:</strong> 
+                            <span class="badge {% if session.anxiety_score <= 3 %}bg-success{% elif session.anxiety_score <= 6 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ session.anxiety_score }}/10
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                {% if session.symptoms_reported %}
+                <p><strong>Symptoms:</strong> {{ session.symptoms_reported }}</p>
+                {% endif %}
+                
+                {% if session.assessment_notes %}
+                <p><strong>Assessment:</strong> {{ session.assessment_notes }}</p>
+                {% endif %}
+                
+                {% if session.treatment_plan %}
+                <p><strong>Treatment Plan:</strong> {{ session.treatment_plan }}</p>
+                {% endif %}
+                
+                {% if session.next_appointment_recommended %}
+                <p class="mb-0">
+                    <i class="bi bi-calendar-check text-success"></i> 
+                    <strong>Next Appointment:</strong> {{ session.next_appointment_date|date:"F d, Y" }}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted text-center py-3">No follow-up sessions available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Referral Actions -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-arrow-right-circle"></i> Referral Actions</h5>
+    </div>
+    <div class="card-body">
+        {% if referrals %}
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Action Type</th>
+                        <th>Status</th>
+                        <th>Trigger Reason</th>
+                        <th>Assigned To</th>
+                        <th>Outcome</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for referral in referrals %}
+                    <tr>
+                        <td>{{ referral.action_date|date:"M d, Y" }}</td>
+                        <td><span class="badge bg-secondary">{{ referral.get_action_type_display }}</span></td>
+                        <td>
+                            {% if referral.status == "COMPLETED" %}
+                            <span class="badge bg-success">Completed</span>
+                            {% elif referral.status == "PENDING" %}
+                            <span class="badge bg-warning">Pending</span>
+                            {% else %}
+                            <span class="badge bg-info">{{ referral.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ referral.trigger_reason|truncatewords:10 }}</td>
+                        <td>{{ referral.assigned_to.get_full_name|default:"Unassigned" }}</td>
+                        <td>{{ referral.outcome|truncatewords:10|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">No referral actions available</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

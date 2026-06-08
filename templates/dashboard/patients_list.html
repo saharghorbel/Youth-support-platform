@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Patients - Youth Support Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2"><i class="bi bi-heart-pulse"></i> Patients</h1>
+        <p class="text-muted">Manage and monitor patient records</p>
+    </div>
+    <div>
+        {% if user.has_supervisor_permission %}
+        <a href="{% url 'dashboard:export-patients-csv' %}" class="btn btn-success me-2">
+            <i class="bi bi-download"></i> Export CSV
+        </a>
+        {% endif %}
+        <a href="{% url 'dashboard:home' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Search</label>
+                <input type="text" name="search" class="form-control" placeholder="Name or ID" value="{{ current_search }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Region</label>
+                <select name="region" class="form-select">
+                    <option value="">All Regions</option>
+                    {% for region in regions %}
+                    <option value="{{ region }}" {% if region == current_region %}selected{% endif %}>{{ region }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Adherence Risk</label>
+                <select name="risk_level" class="form-select">
+                    <option value="">All Levels</option>
+                    <option value="LOW" {% if current_risk == "LOW" %}selected{% endif %}>Low</option>
+                    <option value="MEDIUM" {% if current_risk == "MEDIUM" %}selected{% endif %}>Medium</option>
+                    <option value="HIGH" {% if current_risk == "HIGH" %}selected{% endif %}>High</option>
+                    <option value="CRITICAL" {% if current_risk == "CRITICAL" %}selected{% endif %}>Critical</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Results Summary -->
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Showing <strong>{{ total_count }}</strong> patient(s)
+</div>
+
+<!-- Patients Table -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Region</th>
+                        <th>Phone</th>
+                        <th>Adherence Rate</th>
+                        <th>Risk Level</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in page_obj %}
+                    <tr>
+                        <td><code>{{ item.patient.patient_id }}</code></td>
+                        <td>
+                            <strong>{{ item.patient.full_name }}</strong><br>
+                            <small class="text-muted">{{ item.patient.get_gender_display }}</small>
+                        </td>
+                        <td>{{ item.patient.age }} years</td>
+                        <td>{{ item.patient.region }}</td>
+                        <td>{{ item.patient.phone_number }}</td>
+                        <td>
+                            {% if item.adherence %}
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1 me-2" style="height: 20px; width: 100px;">
+                                    <div class="progress-bar {% if item.adherence.adherence_rate >= 80 %}bg-success{% elif item.adherence.adherence_rate >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                         style="width: {{ item.adherence.adherence_rate }}%">
+                                        {{ item.adherence.adherence_rate|floatformat:0 }}%
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <span class="text-muted">Not Calculated</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.adherence %}
+                            <span class="badge badge-risk-{{ item.adherence.risk_level|lower }}">
+                                {{ item.adherence.risk_level }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:patient-detail' item.patient.id %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                            <p class="mt-2">No patients found</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="card-footer">
+        <nav>
+            <ul class="pagination justify-content-center mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if current_search %}&search={{ current_search }}{% endif %}{% if current_region %}&region={{ current_region }}{% endif %}{% if current_risk %}&risk_level={{ current_risk }}{% endif %}">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_region %}&region={{ current_region }}{% endif %}{% if current_risk %}&risk_level={{ current_risk }}{% endif %}">Previous</a>
+                </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_region %}&region={{ current_region }}{% endif %}{% if current_risk %}&risk_level={{ current_risk }}{% endif %}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_region %}&region={{ current_region }}{% endif %}{% if current_risk %}&risk_level={{ current_risk }}{% endif %}">Last</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

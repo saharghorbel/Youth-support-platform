@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ student.full_name }} - Youth Support Platform{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2"><i class="bi bi-person-badge"></i> {{ student.full_name }}</h1>
+        <p class="text-muted">Student ID: <code>{{ student.student_id }}</code></p>
+    </div>
+    <div>
+        <a href="{% url 'dashboard:students-list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Students
+        </a>
+    </div>
+</div>
+
+<!-- Student Overview -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Student Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Full Name:</strong> {{ student.full_name }}</p>
+                        <p><strong>Date of Birth:</strong> {{ student.date_of_birth|date:"F d, Y" }}</p>
+                        <p><strong>Age:</strong> {{ student.age }} years</p>
+                        <p><strong>Gender:</strong> {{ student.get_gender_display }}</p>
+                        <p><strong>School:</strong> {{ student.school_name }}</p>
+                        <p><strong>Grade Level:</strong> Grade {{ student.grade_level }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Region:</strong> {{ student.region }}</p>
+                        <p><strong>Guardian:</strong> {{ student.guardian_name }}</p>
+                        <p><strong>Guardian Phone:</strong> {{ student.guardian_phone }}</p>
+                        <p><strong>Guardian Email:</strong> {{ student.guardian_email }}</p>
+                        <p><strong>Enrollment Date:</strong> {{ student.enrollment_date|date:"F d, Y" }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if student.is_active %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Quick Stats</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Attendance Rate</span>
+                        <strong>{{ attendance_rate }}%</strong>
+                    </div>
+                    <div class="progress mt-1" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: {{ attendance_rate }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Average Grade</span>
+                        <strong>{{ avg_grade }}/20</strong>
+                    </div>
+                    <div class="progress mt-1" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: {% widthratio avg_grade 20 100 %}%"></div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <p class="mb-1"><strong>Risk Assessments:</strong> {{ risk_assessments|length }}</p>
+                <p class="mb-1"><strong>Interventions:</strong> {{ interventions|length }}</p>
+                <p class="mb-0"><strong>Behavior Notes:</strong> {{ behavior_notes|length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Risk Assessments -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Risk Assessments</h5>
+    </div>
+    <div class="card-body">
+        {% if risk_assessments %}
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Risk Level</th>
+                        <th>Overall Score</th>
+                        <th>Attendance</th>
+                        <th>Academic</th>
+                        <th>Behavior</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assessment in risk_assessments %}
+                    <tr>
+                        <td>{{ assessment.assessment_date|date:"M d, Y" }}</td>
+                        <td>
+                            <span class="badge badge-risk-{{ assessment.risk_level|lower }}">
+                                {{ assessment.risk_level }}
+                            </span>
+                        </td>
+                        <td><strong>{{ assessment.overall_risk_score|floatformat:1 }}</strong></td>
+                        <td>{{ assessment.attendance_score|floatformat:1 }}%</td>
+                        <td>{{ assessment.academic_score|floatformat:1 }}%</td>
+                        <td>{{ assessment.behavior_score|floatformat:1 }}%</td>
+                        <td>{{ assessment.explanation|truncatewords:15 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">No risk assessments available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Attendance Records -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Recent Attendance (Last 30 Days)</h5>
+    </div>
+    <div class="card-body">
+        {% if attendance_records %}
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Reason</th>
+                        <th>Recorded By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in attendance_records %}
+                    <tr>
+                        <td>{{ record.date|date:"M d, Y" }}</td>
+                        <td>
+                            {% if record.status == "PRESENT" %}
+                            <span class="badge bg-success">Present</span>
+                            {% elif record.status == "ABSENT" %}
+                            <span class="badge bg-danger">Absent</span>
+                            {% elif record.status == "LATE" %}
+                            <span class="badge bg-warning">Late</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ record.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ record.reason|default:"-" }}</td>
+                        <td>{{ record.created_by.get_full_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">No attendance records available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Grade Records -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-journal-text"></i> Recent Grades</h5>
+    </div>
+    <div class="card-body">
+        {% if grade_records %}
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Grade</th>
+                        <th>Exam Type</th>
+                        <th>Exam Date</th>
+                        <th>Recorded By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grade_records %}
+                    <tr>
+                        <td><strong>{{ grade.subject }}</strong></td>
+                        <td>
+                            <span class="badge {% if grade.grade >= 16 %}bg-success{% elif grade.grade >= 10 %}bg-info{% else %}bg-danger{% endif %}">
+                                {{ grade.grade }}/20
+                            </span>
+                        </td>
+                        <td>{{ grade.get_exam_type_display }}</td>
+                        <td>{{ grade.exam_date|date:"M d, Y" }}</td>
+                        <td>{{ grade.created_by.get_full_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">No grade records available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Behavior Notes -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-chat-left-text"></i> Behavior Notes</h5>
+    </div>
+    <div class="card-body">
+        {% if behavior_notes %}
+        {% for note in behavior_notes %}
+        <div class="alert alert-{% if note.severity == 'POSITIVE' %}success{% elif note.severity == 'SERIOUS' %}danger{% elif note.severity == 'MODERATE' %}warning{% else %}info{% endif %}">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <strong>{{ note.date|date:"M d, Y" }}</strong> - 
+                    <span class="badge bg-secondary">{{ note.get_category_display }}</span>
+                    <span class="badge bg-dark">{{ note.get_severity_display }}</span>
+                </div>
+                <small class="text-muted">by {{ note.created_by.get_full_name }}</small>
+            </div>
+            <p class="mb-1 mt-2">{{ note.description }}</p>
+            {% if note.action_taken %}
+            <p class="mb-0"><strong>Action Taken:</strong> {{ note.action_taken }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted text-center py-3">No behavior notes available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Intervention Plans -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-clipboard-check"></i> Intervention Plans</h5>
+    </div>
+    <div class="card-body">
+        {% if interventions %}
+        {% for intervention in interventions %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>{{ intervention.title }}</strong>
+                    <span class="badge bg-{% if intervention.status == 'COMPLETED' %}success{% elif intervention.status == 'IN_PROGRESS' %}primary{% elif intervention.status == 'APPROVED' %}info{% else %}warning{% endif %}">
+                        {{ intervention.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <p><strong>Description:</strong> {{ intervention.description }}</p>
+                <p><strong>Start Date:</strong> {{ intervention.start_date|date:"M d, Y" }}</p>
+                <p><strong>Target End Date:</strong> {{ intervention.target_end_date|date:"M d, Y" }}</p>
+                {% if intervention.actual_end_date %}
+                <p><strong>Actual End Date:</strong> {{ intervention.actual_end_date|date:"M d, Y" }}</p>
+                {% endif %}
+                <p><strong>Assigned To:</strong> {{ intervention.assigned_to.get_full_name|default:"Unassigned" }}</p>
+                
+                {% if intervention.goals %}
+                <p><strong>Goals:</strong></p>
+                <pre class="bg-light p-2 rounded">{{ intervention.goals }}</pre>
+                {% endif %}
+                
+                {% if intervention.progress_notes %}
+                <p><strong>Progress Notes:</strong></p>
+                <pre class="bg-light p-2 rounded">{{ intervention.progress_notes }}</pre>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted text-center py-3">No intervention plans available</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+ID,Student ID,Student Name,Date,Severity,Category,Description,Action Taken
+49,STU0015,Dorra Bouzid,2026-06-04,MINOR,ATTENTION,Occasional distraction in class,Discussed with student
+39,STU0019,Sarra Chaabane,2026-06-03,MINOR,CONDUCT,Occasional distraction in class,Discussed with student
+40,STU0019,Sarra Chaabane,2026-05-31,POSITIVE,SOCIAL,Excellent participation in class,
+45,STU0024,Amira Hamdi,2026-05-31,NEUTRAL,PARTICIPATION,Normal behavior observed,Discussed with student
+46,STU0024,Amira Hamdi,2026-05-31,MODERATE,PARTICIPATION,"Disruptive behavior, needs attention",Discussed with student
+48,STU0015,Dorra Bouzid,2026-05-23,MODERATE,PARTICIPATION,"Disruptive behavior, needs attention",Discussed with student
+32,STU0001,Dorra Sassi,2026-05-17,POSITIVE,CONDUCT,Excellent participation in class,
+33,STU0014,Sarra Maaloul,2026-05-17,SERIOUS,CONDUCT,"Serious behavioral issues, immediate intervention needed",Discussed with student
+42,STU0021,Hiba Karoui,2026-05-17,MINOR,SOCIAL,Occasional distraction in class,Discussed with student
+52,STU0005,Emna Ayari,2026-05-13,POSITIVE,MOTIVATION,Excellent participation in class,
+34,STU0014,Sarra Maaloul,2026-05-13,SERIOUS,CONDUCT,"Serious behavioral issues, immediate intervention needed",Discussed with student
+29,STU0023,Bilel Karoui,2026-05-12,MINOR,CONDUCT,Occasional distraction in class,Discussed with student
+47,STU0015,Dorra Bouzid,2026-05-11,MINOR,PARTICIPATION,Occasional distraction in class,Discussed with student
+41,STU0013,Mohamed Hamdi,2026-05-05,NEUTRAL,ATTENTION,Normal behavior observed,Discussed with student
+36,STU0026,Youssef Chouchane,2026-05-02,MODERATE,ATTENTION,"Disruptive behavior, needs attention",Discussed with student
+44,STU0030,Amine Dridi,2026-04-27,MINOR,CONDUCT,Occasional distraction in class,Discussed with student
+35,STU0026,Youssef Chouchane,2026-04-26,NEUTRAL,ATTENTION,Normal behavior observed,Discussed with student
+31,STU0023,Bilel Karoui,2026-04-24,POSITIVE,SOCIAL,Excellent participation in class,
+51,STU0005,Emna Ayari,2026-04-20,MODERATE,CONDUCT,"Disruptive behavior, needs attention",Discussed with student
+30,STU0023,Bilel Karoui,2026-04-17,NEUTRAL,PARTICIPATION,Normal behavior observed,Discussed with student
+43,STU0021,Hiba Karoui,2026-04-13,MODERATE,PARTICIPATION,"Disruptive behavior, needs attention",Discussed with student
+50,STU0005,Emna Ayari,2026-04-12,POSITIVE,ATTENTION,Excellent participation in class,
+37,STU0026,Youssef Chouchane,2026-04-11,MINOR,ATTENTION,Occasional distraction in class,Discussed with student
+38,STU0003,Karim Slimani,2026-04-09,POSITIVE,CONDUCT,Excellent participation in class,
